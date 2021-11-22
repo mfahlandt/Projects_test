@@ -1,0 +1,20 @@
+name: Add Issues to Project Board
+on: 
+  issues:
+    types:
+      - opened
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  assign_to_project:
+    runs-on: ubuntu-latest
+    name: Assign topic to Project
+    steps:
+    - name: Assign issues to GitHub Project
+      uses: srggrs/assign-one-project-github-action@1.3.1
+      if: github.event.action == 'opened'
+      with:
+        project: 'https://github.com/users/mfahlandt/projects/1'
+        column_name: 'Todo'
+
