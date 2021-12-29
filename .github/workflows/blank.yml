@@ -37,7 +37,7 @@ jobs:
       - name: Add PR to project
         env:
           GITHUB_TOKEN: ${{ secrets.YOUR_TOKEN }}
-          PR_ID: ${{ github.event.issue.node_id }}
+          PR_ID: ${{ github.event.issue.id }}
         run: |
           item_id="$( gh api graphql -f query='
             mutation($project:ID!, $pr:ID!) {
