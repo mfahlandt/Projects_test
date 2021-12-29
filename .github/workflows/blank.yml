@@ -17,4 +17,6 @@ jobs:
       with:
         project: 'https://github.com/users/mfahlandt/projects/1'
         column_name: 'Todo'
+      env:
+       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
