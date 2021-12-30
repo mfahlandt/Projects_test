@@ -10,7 +10,7 @@ jobs:
       - name: Get project data
         env:
           GITHUB_TOKEN: ${{ secrets.YOUR_TOKEN }}
-          USER: mfahlandt
+          ACCOUNT: mfahlandt
           PROJECT_NUMBER: 3
         run: |
           gh api graphql --header 'GraphQL-Features: projects_next_graphql' -f query='
@@ -27,9 +27,11 @@ jobs:
                   }
                 }
               }
-            }' -f user=$USER -F number=$PROJECT_NUMBER > project_data.json
+            }' -f user=$ACCOUNT -F number=$PROJECT_NUMBER > project_data.json
 
-          echo 'PROJECT_ID='$(jq '.data.user.projectNext.id' project_data.json) >> $GITHUB_ENV
+          pID=$(jq '.data.user.projectNext.id' project_data.json)
+          echo $pid
+          echo "PROJECT_ID=$pid" >> $GITHUB_ENV
       - name: Use the value
         id: step_two
         run: |
