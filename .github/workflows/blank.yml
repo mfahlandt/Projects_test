@@ -13,7 +13,7 @@ jobs:
           USER: mfahlandt
           PROJECT_NUMBER: 3
         run: |
-          gh api graphql -f query='
+          gh api graphql --header 'GraphQL-Features: projects_next_graphql' -f query='
             query($user: String!, $number: Int!) {
               user(login: $user){
                 projectNext(number: $number) {
