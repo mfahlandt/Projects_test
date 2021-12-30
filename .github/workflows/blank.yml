@@ -30,8 +30,10 @@ jobs:
             }' -f user=$USER -F number=$PROJECT_NUMBER > project_data.json
 
           echo 'PROJECT_ID='$(jq '.data.user.projectNext.id' project_data.json) >> $GITHUB_ENV
-          echo $PROJECT_ID
-
+      - name: Use the value
+        id: step_two
+        run: |
+          echo "${{ env.PROJECT_NUMBER }}" # This will output 'yellow'
       - name: Add Issue to project
         env:
           GITHUB_TOKEN: ${{ secrets.YOUR_TOKEN }}
