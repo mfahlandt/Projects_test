@@ -33,7 +33,7 @@ jobs:
       - name: Use the value
         id: step_two
         run: |
-          echo "${{ env.PROJECT_NUMBER }}" # This will output 'yellow'
+          echo "${{ env.PROJECT_ID }}" # This will output 'yellow'
       - name: Add Issue to project
         env:
           GITHUB_TOKEN: ${{ secrets.YOUR_TOKEN }}
