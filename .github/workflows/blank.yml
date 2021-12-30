@@ -30,7 +30,7 @@ jobs:
             }' -f user=$USER -F number=$PROJECT_NUMBER > project_data.json
 
           echo 'PROJECT_ID='$(jq '.data.user.projectNext.id' project_data.json) >> $GITHUB_ENV
-          echo $GITHUB_ENV
+          echo $PROJECT_ID
 
       - name: Add Issue to project
         env:
