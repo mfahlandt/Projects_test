@@ -3,10 +3,10 @@
 
 name: Add issue to project
 
-# on:
-#   issues:
-#     types:
-#       - opened
+on:
+  issues:
+    types:
+      - opened
 
 env:
   ORGANIZATION: YOUR_ORGANIZATION
@@ -32,12 +32,6 @@ jobs:
               organization(login: $org){
                 projectNext(number: $number) {
                   id
-                  fields(first:20) {
-                    nodes {
-                      id
-                      name
-                    }
-                  }
                 }
               }
             }' -f org=$ORGANIZATION -F number=$PROJECT_NUMBER > project_data.json
