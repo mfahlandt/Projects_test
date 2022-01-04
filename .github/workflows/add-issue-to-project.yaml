@@ -1,0 +1,59 @@
+# This workflow adds an issue to the specified project (beta)
+# (see also https://docs.github.com/en/issues/trying-out-the-new-projects-experience/automating-projects)
+
+name: Add issue to project
+
+# on:
+#   issues:
+#     types:
+#       - opened
+
+env:
+  ORGANIZATION: YOUR_ORGANIZATION
+  PROJECT_NUMBER: YOUR_PROJECT_NUMBER
+
+jobs:
+  add-issue:
+    runs-on: ubuntu-latest
+    steps:
+      # Depending on the requirements this may be an alternative: https://github.com/peter-murray/workflow-application-token-action
+      - name: Generate token
+        id: generate_token
+        uses: tibdex/github-app-token@v1.5.1
+        with:
+          app_id: ${{ secrets.APP_ID }}
+          private_key: ${{ secrets.APP_PRIVATE_KEY }}
+      - name: Get project data
+        env:
+          GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
+        run: |
+          gh api graphql --header 'GraphQL-Features: projects_next_graphql' -f query='
+            query($org: String!, $number: Int!) {
+              organization(login: $org){
+                projectNext(number: $number) {
+                  id
+                  fields(first:20) {
+                    nodes {
+                      id
+                      name
+                    }
+                  }
+                }
+              }
+            }' -f org=$ORGANIZATION -F number=$PROJECT_NUMBER > project_data.json
+
+          echo 'PROJECT_ID='$(jq '.data.organization.projectNext.id' project_data.json) >> $GITHUB_ENV
+      - name: Add issue to project
+        env:
+          GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
+          PROJECT_ID: ${{ env.PROJECT_ID }}
+          ISSUE_ID: ${{ github.event.issue.node_id }}
+        run: |
+          gh api graphql -f query='
+            mutation($project:ID!, $issue:ID!) {
+              addProjectNextItem(input: {projectId: $project, contentId: $issue}) {
+                projectNextItem {
+                  id
+                }
+              }
+            }' -f project=$PROJECT_ID -f issue=$ISSUE_ID
