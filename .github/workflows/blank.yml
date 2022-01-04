@@ -29,8 +29,8 @@ jobs:
               }
             }' -f user=$ACCOUNT -F number=$PROJECT_NUMBER > project_data.json
 
-          pID=$(jq '.data.user.projectNext.id' project_data.json)
-          echo $pid
+          pid=$(jq '.data.user.projectNext.id' project_data.json)
+          echo "Found project ID $pid"
           echo "PROJECT_ID=$pid" >> $GITHUB_ENV
       - name: Use the value
         env:
@@ -42,7 +42,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.YOUR_TOKEN }}
           ISSUE_ID: ${{ github.event.issue.node_id }}
-          PROJECT_ID: ${{  env.PROJECT_ID }}
+          PROJECT_ID: ${{ env.PROJECT_ID }}
         run: |
           item_id="$( gh api graphql -f query='
             mutation($project:ID!, $issue:ID!) {
