@@ -29,6 +29,13 @@ jobs:
               }
             }' -f user=$ACCOUNT -F number=$PROJECT_NUMBER > project_data.json
 
+          echo "Project data JSON:"
+          cat project_data.json
+          echo
+          
+          echo -n "jq version: "
+          jq --version
+
           pid=$(jq '.data.user.projectNext.id' project_data.json)
           echo "Found project ID $pid"
           echo "PROJECT_ID=$pid" >> $GITHUB_ENV
